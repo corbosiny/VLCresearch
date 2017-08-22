@@ -28,10 +28,7 @@ String VLCreceiver::receiveString()
 
 char VLCreceiver::receiveCharacter()
 {
- Serial.println("Recieving character..");
  String byteString = receiveByteString();
- Serial.print("Character recieved: ");
- Serial.println(convertByteStringToCharacter(byteString));
  return convertByteStringToCharacter(byteString);
 }
 
@@ -39,32 +36,28 @@ char VLCreceiver::receiveCharacter()
 String VLCreceiver::receiveByteString()
 {
   String byteString = "";
-  Serial.println("Recieving byte String..");
   waitForStartBit();
   for(int bitNumber = 0; bitNumber < 8; bitNumber++)
   {
     byteString += receiveBit();
   }
   updateEnvironmentalNoiseReading();
-  Serial.println("recieved byte string: " + byteString);
+  Serial.println("received byteString: " + byteString);
   return byteString;
 }
 
 
 void VLCreceiver::waitForStartBit()
 {
-  while(getSensorReading() < currentEnvironmentalNoiseReading + THRESHOLD)
+  while(receiveBit() == '0')
   {;}
-  delayMicroseconds(standardDelayInMicroseconds / 2);
-  delayMicroseconds(standardDelayInMicroseconds);
-  Serial.println("Start bit recieved");
+  delayMicroseconds(standardDelayInMicroseconds / 2); //puts our readings in the center of the bit transfers where it is most stable
 }
 
 
 char VLCreceiver::receiveBit()
 {
   char bitReceived;
-  Serial.println("recieving bit..");
   if(getSensorReading() > THRESHOLD + currentEnvironmentalNoiseReading)
   {
     bitReceived = '1';
@@ -74,8 +67,6 @@ char VLCreceiver::receiveBit()
     bitReceived = '0';
   }
   delayMicroseconds(standardDelayInMicroseconds);
-  Serial.print("Bit recieved: ");
-  Serial.println(bitReceived);
   return bitReceived;
 }
 
@@ -100,6 +91,5 @@ int VLCreceiver::getSensorReading()
 
 void VLCreceiver::updateEnvironmentalNoiseReading()
 {
-  this->currentEnvironmentalNoiseReading = analogRead(voltageSensorPin);
+  this->currentEnvironmentalNoiseReading = 0; //temporarly turned off
 }
-

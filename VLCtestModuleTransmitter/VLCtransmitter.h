@@ -7,7 +7,7 @@ class VLCtransmitter
 {
   
   public:
-  static const long long int standardDelayInMicroseconds = 10000;
+  static const long long int standardDelayInMicroseconds = 500000;
   static const char STARTBIT = '1';
   static const char ENDBIT = '0';
   

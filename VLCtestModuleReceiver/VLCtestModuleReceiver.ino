@@ -12,6 +12,7 @@ void setup()
 void loop() 
 {
   Serial.println("Recieving message..");
+  delay(2625);
   Serial.println(receiver.receiveString());
   Serial.println("message recieved!\n");
 }
