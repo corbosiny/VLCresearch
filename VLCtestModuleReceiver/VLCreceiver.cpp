@@ -76,7 +76,7 @@ char VLCreceiver::convertByteStringToCharacter(String byteString)
   int asciiValue = 0;
   for(int bitIndex = 0; bitIndex < byteString.length(); bitIndex++)
   {
-    asciiValue += pow(2, byteString.length() - bitIndex - 1) * byteString[bitIndex];
+    asciiValue += pow(2, byteString.length() - bitIndex - 1) * ((int)byteString[bitIndex] - 48);
   }
   char convertedCharacter = asciiValue;
   return convertedCharacter;
