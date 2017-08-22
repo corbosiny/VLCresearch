@@ -12,6 +12,8 @@ void loop()
   if(Serial.available())
   {
     Serial.read(); //clearing out the serial buffer
+    digitalWrite(transmitterPin, HIGH);
+    delay(3000);
     transmitter.sendStringToReciever("abcdefghijklmnopqrstuvwxyz");
   }
 }
