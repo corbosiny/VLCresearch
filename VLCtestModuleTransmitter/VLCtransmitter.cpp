@@ -8,54 +8,58 @@ VLCtransmitter::VLCtransmitter(int signalPin)
 }
 
 
-void VLCtransmitter::sendStringToReciever(String message)
+void VLCtransmitter::sendStringToReceiver(String message)
 { 
-  Serial.println("Message Length: " + String(message.length()));
   for(int messageIndex = 0; messageIndex < message.length() + 1; messageIndex++) //.length doesnt count the null character, so we add one to make sure we include it
   {
     char currentCharacter = message[messageIndex];
-    Serial.print("Sending character: ");
-    Serial.println(currentCharacter);
-    sendCharacterToReciever(currentCharacter);   
-    Serial.println("Charcater sent!");
+    sendCharacterToReceiver(currentCharacter);   
   }  
 }
 
-void VLCtransmitter::sendCharacterToReciever(char character)
+void VLCtransmitter::sendCharacterToReceiver(char character)
 {
-  String characterAsByteString = convertCharacterToByteString(character);
-  Serial.println("Character as byte string: " + characterAsByteString);
-  sendByteString(characterAsByteString); 
+  sendByteToReceiver((byte)character);
 }
 
-String VLCtransmitter::convertCharacterToByteString(char character)
+void VLCtransmitter::sendIntegerToReceiver(int integerValue)
 {
-  int asciiValue = character;
+  sendByteToReceiver((byte)integerValue);
+}
+
+void VLCtransmitter::sendByteToReceiver(byte byteValue)
+{
+  String stringOfBits = convertByteToStringOfBits(byteValue);
+  sendStringOfBits(stringOfBits);
+}
+
+String VLCtransmitter::convertByteToStringOfBits(byte byteValue)
+{
   int currentBitIndex = 7;
-  String byteString = "00000000";
-  while(asciiValue > 0)
+  String stringOfBits = "00000000";
+  while(byteValue > 0)
   {
-    if(asciiValue % 2 == 0)
+    if(byteValue % 2 == 0)
     {
-      byteString[currentBitIndex] = '0'; 
+      stringOfBits[currentBitIndex] = '0'; 
     }
     else
     {
-      byteString[currentBitIndex] = '1';
+      stringOfBits[currentBitIndex] = '1';
     }
     
-    asciiValue /= 2;
+    byteValue /= 2;
     currentBitIndex--;
   }
-  return byteString;
+  return stringOfBits;
 }
 
-void VLCtransmitter::sendByteString(String byteString)
+void VLCtransmitter::sendStringOfBits(String stringOfBits)
 {
   sendBit(STARTBIT);
-  for(int bitIndex = 0; bitIndex < byteString.length(); bitIndex++)
+  for(int bitIndex = 0; bitIndex < stringOfBits.length(); bitIndex++)
   {
-    char bitToSend = byteString[bitIndex];
+    char bitToSend = stringOfBits[bitIndex];
     sendBit(bitToSend);
   }
   sendBit(ENDBIT);

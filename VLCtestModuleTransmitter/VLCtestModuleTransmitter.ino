@@ -14,7 +14,7 @@ void loop()
     Serial.read(); //clearing out the serial buffer
     digitalWrite(transmitterPin, HIGH);
     delay(3000);
-    transmitter.sendStringToReciever("abcdefghijklmnopqrstuvwxyz");
+    transmitter.sendStringToReceiver("abcdefghijklmnopqrstuvwxyz");
   }
 }
 

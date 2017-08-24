@@ -11,39 +11,46 @@ VLCreceiver::VLCreceiver(int voltageSensePin, int threshold)
 String VLCreceiver::receiveString()
 {
   String messageReceived = "";
-  while(true)
+  char lastCharacterReceived = '_'; 
+  while(lastCharacterReceived != '\0')
   {
-    char characterReceived = receiveCharacter();
-    if(characterReceived == 0) //null character signals end of string
-    {
-      return messageReceived;
-    }
-    else
-    {
-      messageReceived += characterReceived;
-    }
+    lastCharacterReceived = receiveCharacter();
+    messageReceived += lastCharacterReceived;
   }
+  messageReceived.remove(messageReceived.length()); //removing the null character from the end
+  return messageReceived;
 }
-
 
 char VLCreceiver::receiveCharacter()
 {
- String byteString = receiveByteString();
- return convertByteStringToCharacter(byteString);
+ char charReceived = (char)receiveRawByteValue();
+ return charReceived;
 }
 
 
-String VLCreceiver::receiveByteString()
+int VLCreceiver::receiveInteger()
 {
-  String byteString = "";
+  int numberReceived = (int)receiveRawByteValue();
+  return numberReceived;
+}
+
+byte VLCreceiver::receiveRawByteValue()
+{
+  String byteString = receiveStringOfBits();
+  return convertStringOfBitsToByte(byteString);
+}
+
+String VLCreceiver::receiveStringOfBits()
+{
+  String stringOfBits = "";
   waitForStartBit();
   for(int bitNumber = 0; bitNumber < 8; bitNumber++)
   {
-    byteString += receiveBit();
+    stringOfBits += receiveBit();
   }
   updateEnvironmentalNoiseReading();
-  Serial.println("received byteString: " + byteString);
-  return byteString;
+  Serial.println("received byteString: " + stringOfBits);
+  return stringOfBits;
 }
 
 
@@ -71,15 +78,14 @@ char VLCreceiver::receiveBit()
 }
 
 
-char VLCreceiver::convertByteStringToCharacter(String byteString)
+byte VLCreceiver::convertStringOfBitsToByte(String stringOfBits)
 {
-  int asciiValue = 0;
-  for(int bitIndex = 0; bitIndex < byteString.length(); bitIndex++)
+  byte byteValue = 0;
+  for(int bitIndex = 0; bitIndex < stringOfBits.length(); bitIndex++)
   {
-    asciiValue += pow(2, byteString.length() - bitIndex - 1) * ((int)byteString[bitIndex] - 48);
+    byteValue += pow(2, stringOfBits.length() - bitIndex - 1) * ((int)stringOfBits[bitIndex] - 48);
   }
-  char convertedCharacter = asciiValue;
-  return convertedCharacter;
+  return byteValue;
 }
 
 

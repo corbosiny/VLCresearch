@@ -13,8 +13,10 @@ class VLCreceiver
 
   String receiveString();
   char receiveCharacter();
-  String receiveByteString();
-  char convertByteStringToCharacter(String byteString);
+  int receiveInteger();
+  byte receiveRawByteValue();
+  String receiveStringOfBits();
+  byte convertStringOfBitsToByte(String stringOfBits);
   void waitForStartBit();
   char receiveBit();
 
