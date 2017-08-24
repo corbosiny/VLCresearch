@@ -12,6 +12,7 @@ class VLCtransmitter
   static const char ENDBIT = '0';
   
   VLCtransmitter(int signalPin);
+  
   void sendStringToReceiver(String message);
   void sendCharacterToReceiver(char character);
   void sendIntegerToReceiver(int integerValue);

@@ -10,7 +10,7 @@ VLCtransmitter::VLCtransmitter(int signalPin)
 
 void VLCtransmitter::sendStringToReceiver(String message)
 { 
-  for(int messageIndex = 0; messageIndex < message.length() + 1; messageIndex++) //.length doesnt count the null character, so we add one to make sure we include it
+  for(int messageIndex = 0; messageIndex < message.length(); messageIndex++) 
   {
     char currentCharacter = message[messageIndex];
     sendCharacterToReceiver(currentCharacter);   
