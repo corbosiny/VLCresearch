@@ -7,9 +7,10 @@ class VLCreceiver
 {
 
   public:
-  static const long long int standardDelayInMicroseconds = 500000;
+  static const long long int standardDelayBetweenBitsInMicroseconds = 500000;
   static const char STARTBIT = '1';
-  VLCreceiver(int voltageSensePin, int THRESHOLD);
+  
+  VLCreceiver(int voltageSensePin, int THRESHOLD = 450);
 
   String receiveString();
   char receiveCharacter();

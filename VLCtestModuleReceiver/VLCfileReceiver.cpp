@@ -1,14 +1,14 @@
-#include VLCfileReceiver
+#include "VLCfileReceiver.h"
 
-VLCfileReceiver::VLCfileReceiver(int voltageSensorPin, int baudRate = 9600)
+VLCfileReceiver::VLCfileReceiver(int voltageSensorPin, int baudRate = 9600, int threshold = 450)
 {
- this->voltageSensorPin = voltageSensorPin;
- this->buadRate = buadRate;
+ this->physicalReceiver = new VLCreceiver(voltageSensorPin, threshold);
+ this->baudRate = baudRate;
  initializeSerialPort(); 
 }
 
 
-VLCfileReceiver::initializeSerialPort()
+void VLCfileReceiver::initializeSerialPort()
 {
   if(!Serial)
   {
@@ -18,18 +18,18 @@ VLCfileReceiver::initializeSerialPort()
 }
 
 
-VLCfileReceiver::receiveFile()
+void VLCfileReceiver::receiveAndPassOffFile()
 {
   String fileName = this->physicalReceiver.receiveString();
   String fileData = this->physicalReceiver.receiveString();
   passFileOffToUser(fileName, fileData); 
 }
 
-VLCfileReceiver::passFileOffToUser(String fileName, String fileData)
+void VLCfileReceiver::passFileOffToUser(String fileName, String fileData)
 {
-  Serial.write(fileName);
+  Serial.print(fileName);
   Serial.write(0);
-  Serial.write(fileData);
+  Serial.print(fileData);
   Serial.write(0);
 }
 

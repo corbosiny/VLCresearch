@@ -1,6 +1,6 @@
 #include "VLCreceiver.h"
 
-VLCreceiver::VLCreceiver(int voltageSensePin, int threshold)
+VLCreceiver::VLCreceiver(int voltageSensePin, int threshold = 450)
 {
   this->voltageSensorPin = voltageSensePin; 
   this->THRESHOLD = threshold;
@@ -36,8 +36,8 @@ int VLCreceiver::receiveInteger()
 
 byte VLCreceiver::receiveRawByteValue()
 {
-  String byteString = receiveStringOfBits();
-  return convertStringOfBitsToByte(byteString);
+  String stringOfBits = receiveStringOfBits();
+  return convertStringOfBitsToByte(stringOfBits);
 }
 
 String VLCreceiver::receiveStringOfBits()
@@ -47,6 +47,7 @@ String VLCreceiver::receiveStringOfBits()
   for(int bitNumber = 0; bitNumber < 8; bitNumber++)
   {
     stringOfBits += receiveBit();
+    delayMicroseconds(standardDelayBetweenBitsInMicroseconds);
   }
   updateEnvironmentalNoiseReading();
   Serial.println("received byteString: " + stringOfBits);
@@ -57,15 +58,17 @@ String VLCreceiver::receiveStringOfBits()
 void VLCreceiver::waitForStartBit()
 {
   while(receiveBit() == '0')
-  {;}
-  delayMicroseconds(standardDelayInMicroseconds / 2); //puts our readings in the center of the bit transfers where it is most stable
+  {
+    ;
+  }
+  delayMicroseconds(standardDelayBetweenBitsInMicroseconds / 2); //puts our readings in the center of the bit transfers where it is most stable
 }
 
 
 char VLCreceiver::receiveBit()
 {
   char bitReceived;
-  if(getSensorReading() > THRESHOLD + currentEnvironmentalNoiseReading)
+  if(getSensorReading() >= THRESHOLD + currentEnvironmentalNoiseReading)
   {
     bitReceived = '1';
   }
@@ -73,7 +76,6 @@ char VLCreceiver::receiveBit()
   {
     bitReceived = '0';
   }
-  delayMicroseconds(standardDelayInMicroseconds);
   return bitReceived;
 }
 
@@ -83,7 +85,7 @@ byte VLCreceiver::convertStringOfBitsToByte(String stringOfBits)
   byte byteValue = 0;
   for(int bitIndex = 0; bitIndex < stringOfBits.length(); bitIndex++)
   {
-    byteValue += pow(2, stringOfBits.length() - bitIndex - 1) * ((int)stringOfBits[bitIndex] - 48);
+    byteValue += pow(2, stringOfBits.length() - bitIndex - 1) * atoi(stringOfBits[bitIndex]);
   }
   return byteValue;
 }

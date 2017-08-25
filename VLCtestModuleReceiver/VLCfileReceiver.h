@@ -9,13 +9,13 @@ class VLCfileReceiver
 {
 
   public:
-  VLCfileReceiver(int voltageSensorPin, int baudRate = 9600);
-  void receiveFile();
+  VLCfileReceiver(int voltageSensorPin, int baudRate = 9600, int threshold = 450);
+  void receiveAndPassOffFile();
   
 
   private:
-  VLCreceiver physicalReceiver = null;
-  int buadRate;
+  VLCreceiver physicalReceiver = NULL;
+  int baudRate;
 
   void initializeSerialPort();
   void passFileOffToUser(String fileName, String fileData);

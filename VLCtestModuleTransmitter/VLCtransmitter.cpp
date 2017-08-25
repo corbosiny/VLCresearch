@@ -75,7 +75,6 @@ void VLCtransmitter::sendBit(char bitToSend)
   {
     digitalWrite(transistorSignalPin, LOW);
   }
-  delayMicroseconds(standardDelayInMicroseconds);
-
+  delayMicroseconds(standardDelayBetweenBitsInMicroseconds);
 }
 
