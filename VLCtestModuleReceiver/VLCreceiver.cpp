@@ -17,7 +17,7 @@ String VLCreceiver::receiveString()
     lastCharacterReceived = receiveCharacter();
     messageReceived += lastCharacterReceived;
   }
-  messageReceived.remove(messageReceived.length()); //removing the null character from the end
+  messageReceived.remove(messageReceived.length() - 1); //removing the null character from the end
   return messageReceived;
 }
 

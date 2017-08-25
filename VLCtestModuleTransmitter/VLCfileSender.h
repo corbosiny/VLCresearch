@@ -12,12 +12,12 @@ class VLCfileSender
     void transmitFile();
     
   private:
-    VLCtransmitter transmitter = NULL;
+    VLCtransmitter physicalTransmitter = NULL;
     int baudRate = 9600;
 
-    void initializeSerialPort(int buadRate);
+    void initializeSerialPort();
     String getStringOfBytesFromUser();
-    static void waitForByte();
+    void waitForByte();
 };
 
 #endif

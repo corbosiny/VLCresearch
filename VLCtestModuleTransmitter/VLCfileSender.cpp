@@ -2,16 +2,16 @@
 
 VLCfileSender::VLCfileSender(int voltageSensePin, int baudRate = 9600)
 {
-  initializeSerialPort(baudRate);
   this->baudRate = baudRate;
-  this->transmitter = new VLCtransmitter(voltageSensePin);
+  this->physicalTransmitter = new VLCtransmitter(voltageSensePin);
+  initializeSerialPort();
 }
 
-void VLCfileSender::initializeSerialPort(int buadRate)
+void VLCfileSender::initializeSerialPort()
 {
   if(!Serial) 
   {
-    Serial.begin(baudRate);
+    Serial.begin(this->baudRate);
   }
 }
 
@@ -19,8 +19,8 @@ void VLCfileSender::transmitFile()
 {
   String fileName = getStringOfBytesFromUser();
   String fileData = getStringOfBytesFromUser();
-  this->transmitter.sendStringToReceiver(fileName);
-  this->transmitter.sendStringToReceiver(fileData);
+  this->physicalTransmitter.sendStringToReceiver(fileName);
+  this->physicalTransmitter.sendStringToReceiver(fileData);
 }
 
 String VLCfileSender::getStringOfBytesFromUser()
