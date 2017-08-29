@@ -33,5 +33,6 @@ class VLCfileSender():
 if __name__ == "__main__":
     fileSender = VLCfileSender("COM16")
     while(True):
-        fileName = str(input(">>"))
+        fileName = input(">>")
         fileSender.sendFile(fileName)
+
